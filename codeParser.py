@@ -1,9 +1,9 @@
-=====================================================================================
-FileName    : codeParser.py
-Description : Python script to analyse code
-Author      : Hassene ELHABIBI <elhabibi.hassene@gmail.com>
-date        : 28 February 2021
-=====================================================================================
+#====================================================================================
+#FileName    : codeParser.py
+#Description : Python script to analyse code
+#Author      : Hassene ELHABIBI <elhabibi.hassene@gmail.com>
+#date        : 28 February 2021
+#====================================================================================
 
 import os
 import sys
@@ -63,8 +63,14 @@ def maketempDir(current_path):
    return(dirName)
 
 def SearchKeyWordInLines(file_name,keyWord):
-    """ Check if any line in the file contains given string """
-    # Open the file in read only mode
+    """ 
+    inputParm: file_name : file to be parsed
+                keyWord  : Key word to search for
+    Description: this function will check if any line in the file contains given string.
+    Return: research result ( found (True/False))
+    To conitune, please tape "q".
+     """
+    keyWordFound = False
     with open(file_name, 'r') as read_obj:
         count = 0
         # Read all lines in the file one by one
@@ -72,12 +78,19 @@ def SearchKeyWordInLines(file_name,keyWord):
             count +=1
             # For each line, check if line contains the string
             if keyWord in line:
-                print(f'line {count}: {line}') 
+                #print(f'line {count}: {line}')
+                keyWordFound = True
             else:
                 continue
+        return keyWordFound
 
 def SearchKeyWordInWords(file_name,keyWord):
-    """ Check if any line in the file contains given string """
+    """ 
+    inputParm: file_name : file to be parsed
+                keyWord  : Key word to search for
+    Description: this function will check if any line in the file contains given string.
+    Return: research result ( found (True/False))    
+    """
     # Open the file in read only mode
     with open(file_name, 'r') as read_obj:
         # Read all lines in the file one by one
@@ -164,7 +177,8 @@ def searchForData(working_dir,keyWord):
    inputParm: working_dir : path that will parsed
               keyWord     : Key word to searched for
    Description: this function will search for datas by:
-                - Parsing the project structure
+                - Parsing the code in the current path
+                  excluding the folders, subfolders and filename which start with a dot.
                 - get all datas which contain a keyword
                 - write them to a cvs file
    To conitune, please tape "q".
@@ -172,9 +186,23 @@ def searchForData(working_dir,keyWord):
    print("Implementation of this function is ongoing !")
    current_path = os.getcwd()
    dir_name = maketempDir(current_path)
-   ReadeMeFile = maketempfile(dir_name,"ReadMe","txt")
+   if dir_name != None:
+      csvFile = maketempfile(dir_name,"AnalysisResult","csv")
+      ReadeMeFile = maketempfile(dir_name,"ReadMe","txt")
+      if csvFile != None:
+         if ReadeMeFile == None:
+            sys.exit("Failed to create a ReadMe files")
+      else:
+         sys.exit("Failed to create csv file!")
+   else:
+      sys.exit("Failed to create temp directory!")  
+   
    ReadeMeFileObj = open(ReadeMeFile,"a")
    ReadeMeFileObj.write("Search for data which contain the keyword " + keyWord + " in files under the path " + working_dir)
+   ReadeMeFileObj.write("For more details, please check the file" + csvFile + "\n")
+   csvFileObj = open(csvFile, 'w', newline='')
+   csvWriter = csv.writer(csvFileObj)
+   csvFileObj.close()
    ReadeMeFileObj.close()
     
 def searchForAPI(working_dir,keyWord):
@@ -182,15 +210,24 @@ def searchForAPI(working_dir,keyWord):
    inputParm: working_dir : path that will parsed
               keyWord     : Key word to searched for
    Description: this function will search for APIs by:
-                - Parsing the project structure
+                - Parsing the code in the current path
+                  excluding the folders, subfolders and filename which start with a dot.
                 - get all APIs which contain a keyword
                 - write them to a cvs file
    To conitune, please tape "q".
    """
-   print("Implementation of this function is ongoing !")
    current_path = os.getcwd()
    dir_name = maketempDir(current_path)
-   ReadeMeFile = maketempfile(dir_name,"ReadMe","txt")
+   if dir_name != None:
+      csvFile = maketempfile(dir_name,"AnalysisResult","csv")
+      ReadeMeFile = maketempfile(dir_name,"ReadMe","txt")
+      if csvFile != None:
+         if ReadeMeFile == None:
+            sys.exit("Failed to create a ReadMe files")
+      else:
+         sys.exit("Failed to create csv file!")
+   else:
+      sys.exit("Failed to create temp directory!")
    ReadeMeFileObj = open(ReadeMeFile,"a")
    ReadeMeFileObj.write("Search for APIs which contain the keyword " + keyWord + " in files under the path " + working_dir)
    ReadeMeFileObj.close()
@@ -200,17 +237,30 @@ def searchForTypeDef(working_dir,keyWord):
    inputParm: working_dir : path that will parsed
               keyWord     : Key word to searched for
    Description: this function will search for type definition by:
-                - Parsing the project structure
+                - Parsing the code in the current path
+                  excluding the folders, subfolders and filename which start with a dot.
                 - get all types defintion which contain a keyword
                 - write them to a cvs file
    To conitune, please tape "q".
    """
-   print("Implementation of this function is ongoing !")
    current_path = os.getcwd()
    dir_name = maketempDir(current_path)
-   ReadeMeFile = maketempfile(dir_name,"ReadMe","txt")
+   if dir_name != None:
+      csvFile = maketempfile(dir_name,"AnalysisResult","csv")
+      ReadeMeFile = maketempfile(dir_name,"ReadMe","txt")
+      if csvFile != None:
+         if ReadeMeFile == None:
+            sys.exit("Failed to create a ReadMe files")
+      else:
+         sys.exit("Failed to create csv file!")
+   else:
+      sys.exit("Failed to create temp directory!")
    ReadeMeFileObj = open(ReadeMeFile,"a")
    ReadeMeFileObj.write("Search for type definition which contain the keyword " + keyWord + " in files under the path " + working_dir)
+   ReadeMeFileObj.write("For more details, please check the file" + csvFile + "\n")
+   csvFileObj = open(csvFile, 'w', newline='')
+   csvWriter = csv.writer(csvFileObj)
+   csvFileObj.close()
    ReadeMeFileObj.close()
    
 def SearchForFile(working_dir,keyWord):
@@ -218,25 +268,86 @@ def SearchForFile(working_dir,keyWord):
    inputParm: working_dir : path that will parsed
               keyWord     : Key word to searched for
    Description: this function will search for Files by:
-                - Parsing the project structure
+                - Parsing the code in the current path
+                  excluding the folders, subfolders and filename which start with a dot.
                 - get all files name which contain a keyword
+                - write them to a cvs file
+   To conitune, please tape "q".
+   """
+   current_path = os.getcwd()
+   dir_name = maketempDir(current_path)
+   if dir_name != None:
+      csvFile = maketempfile(dir_name,"AnalysisResult","csv")
+      ReadeMeFile = maketempfile(dir_name,"ReadMe","txt")
+      if csvFile != None:
+         if ReadeMeFile == None:
+            sys.exit("Failed to create a ReadMe files")
+      else:
+         sys.exit("Failed to create csv file!")
+   else:
+      sys.exit("Failed to create temp directory!")
+   ReadeMeFileObj = open(ReadeMeFile,"a")
+   ReadeMeFileObj.write("Search for files which contain the keyword " + keyWord + " in files under the path " + working_dir)
+   ReadeMeFileObj.write("For more details, please check the file" + csvFile + "\n")
+   csvFileObj = open(csvFile, 'w', newline='')
+   csvWriter = csv.writer(csvFileObj) 
+   csvFileObj.close()
+   ReadeMeFileObj.close()
+
+def SearchForEntryPoint(working_dir):
+   """
+   inputParm: working_dir : path that will parsed
+              keyWord     : Key word to searched for
+   Description: this function will search for the program entry point by:
+                - Parsing the code in the current path
+                  excluding the folders, subfolders and filename which start with a dot.
+                - get all possible entry point in the code (search the keyword ENTRY)
                 - write them to a cvs file
    To conitune, please tape "q".
    """
    print("Implementation of this function is ongoing !")
    current_path = os.getcwd()
    dir_name = maketempDir(current_path)
-   ReadeMeFile = maketempfile(dir_name,"ReadMe","txt")
+   if dir_name != None:
+      csvFile = maketempfile(dir_name,"AnalysisResult","csv")
+      ReadeMeFile = maketempfile(dir_name,"ReadMe","txt")
+      if csvFile != None:
+         if ReadeMeFile == None:
+            sys.exit("Failed to create a ReadMe files")
+      else:
+         sys.exit("Failed to create csv file!")
+   else:
+      sys.exit("Failed to create temp directory!")  
    ReadeMeFileObj = open(ReadeMeFile,"a")
-   ReadeMeFileObj.write("Search for files which contain the keyword " + keyWord + " in files under the path " + working_dir)
+   ReadeMeFileObj.write("Search for the program entry point in files under the path " + working_dir + "\n")
+   csvFileObj = open(csvFile, 'w', newline='')
+   csvWriter = csv.writer(csvFileObj)
+   EntryPointFoundNb = 0
+   #Parsing the code
+   for folderName, subfolders, filenames in os.walk(working_dir):
+      if str(os.path.basename(folderName)).startswith('.'):
+         continue
+      else:
+         for filename in filenames:
+            if str(filename).startswith('.'):
+               filenames.remove(filename)
+            else:
+               file_path = os.path.join(folderName, filename)
+               if SearchKeyWordInLines(file_path,"ENTRY"):
+                  EntryPointFoundNb +=1 
+                  csvWriter.writerow([folderName,filename])
+   if EntryPointFoundNb !=0:
+       ReadeMeFileObj.write(EntryPointFoundNb + "entry point is found, for more details please check the file" + csvFile + "\n")
+   csvFileObj.close()
    ReadeMeFileObj.close()
-         
+   
+            
 def GetAnalysisType(working_dir):
     """
     Description: this function will get the type of analysis to be done.
     To conitune, please tape "q".
     """
-    ListOfAnalysis = [1,2,3,4]
+    ListOfAnalysis = [1,2,3,4,5]
     while True:
         AnalysisType = int(input("""Please choose the analyse to be done
         in the following list:
@@ -244,6 +355,7 @@ def GetAnalysisType(working_dir):
         #2.Search for an API
         #3.Search for a type definition
         #4.Search for fileName with keyword in the title
+        #5.Search for the program entry point
         Analysis Type: """))
         if AnalysisType in ListOfAnalysis:
             if AnalysisType == 1:
@@ -261,10 +373,13 @@ def GetAnalysisType(working_dir):
                 keyWord = str(input("Please Enter the key word to search:"))
                 searchForTypeDef(working_dir,keyWord)                             
                 break
-            else:
+            elif AnalysisType ==4:
                 print("Your choosen to search for a file with a keyword in the filename")
                 keyWord = str(input("Please Enter the key word to search:"))
-                SearchForFile(working_dir,keyWord)            
+                SearchForFile(working_dir,keyWord)
+            else:
+                print("Your choosen to search for the progrm entry point ")
+                SearchForEntryPoint(working_dir)    
         else:
             print("Wrong Choise!")
             if  ask_user() == False:
