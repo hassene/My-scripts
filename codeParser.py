@@ -1,3 +1,10 @@
+=====================================================================================
+FileName    : codeParser.py
+Description : Python script to analyse code
+Author      : Hassene ELHABIBI <elhabibi.hassene@gmail.com>
+date        : 28 February 2021
+=====================================================================================
+
 import os
 import sys
 import csv
