@@ -71,7 +71,7 @@ def SearchKeyWordInLines(file_name,keyWord):
     To conitune, please tape "q".
      """
     keyWordFound = False
-    with open(file_name, 'r') as read_obj:
+    with open(file_name, encoding="utf8", errors='ignore') as read_obj:
         count = 0
         # Read all lines in the file one by one
         for line in read_obj:
@@ -333,11 +333,11 @@ def SearchForEntryPoint(working_dir):
                filenames.remove(filename)
             else:
                file_path = os.path.join(folderName, filename)
-               if SearchKeyWordInLines(file_path,"ENTRY"):
+               if SearchKeyWordInLines(file_path,"ENTRY("):
                   EntryPointFoundNb +=1 
                   csvWriter.writerow([folderName,filename])
    if EntryPointFoundNb !=0:
-       ReadeMeFileObj.write(EntryPointFoundNb + "entry point is found, for more details please check the file" + csvFile + "\n")
+       ReadeMeFileObj.write(str(EntryPointFoundNb) + " entry point is found, for more details please check the file" + csvFile + "\n")
    csvFileObj.close()
    ReadeMeFileObj.close()
    
@@ -379,7 +379,8 @@ def GetAnalysisType(working_dir):
                 SearchForFile(working_dir,keyWord)
             else:
                 print("Your choosen to search for the progrm entry point ")
-                SearchForEntryPoint(working_dir)    
+                SearchForEntryPoint(working_dir)
+                break
         else:
             print("Wrong Choise!")
             if  ask_user() == False:
