@@ -91,16 +91,19 @@ def SearchKeyWordInWords(file_name,keyWord):
     Description: this function will check if any line in the file contains given string.
     Return: research result ( found (True/False))    
     """
+    keyWordFound = False    
     # Open the file in read only mode
-    with open(file_name, 'r') as read_obj:
+    with open(file_name, encoding="utf8", errors='ignore') as read_obj:
         # Read all lines in the file one by one
         for line in read_obj:
             for word in line:
                 # For each line, check if line contains the string
                 if keyWord in word:
-                    print(f'Word: {word}') 
+                    #print(f'Word: {word}')
+                    keyWordFound = True 
                 else:
                     continue
+        return keyWordFound                 
 
 def parseDirectory(Current_path,keyWord):
    """
@@ -287,10 +290,24 @@ def SearchForFile(working_dir,keyWord):
    else:
       sys.exit("Failed to create temp directory!")
    ReadeMeFileObj = open(ReadeMeFile,"a")
-   ReadeMeFileObj.write("Search for files which contain the keyword " + keyWord + " in files under the path " + working_dir)
-   ReadeMeFileObj.write("For more details, please check the file" + csvFile + "\n")
+   ReadeMeFileObj.write("Search for files which contain the keyword " + keyWord + " under the path " + working_dir + "\n")
    csvFileObj = open(csvFile, 'w', newline='')
    csvWriter = csv.writer(csvFileObj) 
+   FileFoundNb = 0
+   #Parsing the code
+   for folderName, subfolders, filenames in os.walk(working_dir):
+      if str(os.path.basename(folderName)).startswith('.'):
+         continue
+      else:
+         for filename in filenames:
+            if str(filename).startswith('.'):
+               filenames.remove(filename)
+            else:
+               if keyWord.lower() in filename.lower():
+                  FileFoundNb +=1
+                  csvWriter.writerow([folderName,filename])          
+   if FileFoundNb !=0:
+       ReadeMeFileObj.write(str(FileFoundNb) + " File is found, for more details please check the file" + csvFile + "\n")  
    csvFileObj.close()
    ReadeMeFileObj.close()
 
@@ -381,6 +398,7 @@ def GetAnalysisType(working_dir):
                 print("Your choosen to search for a file with a keyword in the filename")
                 keyWord = str(input("Please Enter the key word to search:"))
                 SearchForFile(working_dir,keyWord)
+                break                
             else:
                 print("Your choosen to search for the progrm entry point ")
                 SearchForEntryPoint(working_dir)
