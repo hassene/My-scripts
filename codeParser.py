@@ -333,9 +333,13 @@ def SearchForEntryPoint(working_dir):
                filenames.remove(filename)
             else:
                file_path = os.path.join(folderName, filename)
-               if SearchKeyWordInLines(file_path,"ENTRY("):
-                  EntryPointFoundNb +=1 
-                  csvWriter.writerow([folderName,filename])
+               with open(file_path, encoding="utf8", errors='ignore') as read_obj:
+                  for line in read_obj:
+                     if line.startswith('ENTRY('):
+                        EntryPointFoundNb +=1
+                        csvWriter.writerow([folderName,filename])
+                     else:
+                        continue                     
    if EntryPointFoundNb !=0:
        ReadeMeFileObj.write(str(EntryPointFoundNb) + " entry point is found, for more details please check the file" + csvFile + "\n")
    csvFileObj.close()
